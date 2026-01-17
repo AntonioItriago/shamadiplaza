@@ -1,219 +1,261 @@
-@ -0,0 +1,218 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title id="page-title">Cargando...</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      color: #fff;
-      background: #222; /* Color por defecto */
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      text-align: center;
-      background: rgba(0,0,0,0.7);
-      padding: 15px;
-      margin: 0;
-    }
-    .category {
-      margin: 20px;
-      background: rgba(0,0,0,0.6);
-      border-radius: 10px;
-      padding: 15px;
-    }
-    .carousel {
-      display: flex;
-      overflow-x: auto;
-      gap: 15px;
-      padding-bottom: 10px;
-      scroll-behavior: smooth;
-    }
-    .item {
-      flex: 0 0 auto;
-      width: 200px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 15px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .item h3 { margin: 10px 0; font-size: 1.1em; }
-    .item p { font-size: 0.9em; color: #ccc; }
-    .price-tag { font-weight: bold; color: #ff9800; margin: 10px 0; }
-    
-    .select-btn {
-      padding: 8px;
-      background: #ff9800;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .cantidad { margin-top: 8px; font-size: 0.85em; opacity: 0.8; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shamadi Plaza - Catálogo de Ventas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #b89241; /* Inspirado en el logo */
+            --dark-green: #2d3e33;   /* Fondo elegante botánico */
+            --light-bg: #f9f7f2;
+            --text-dark: #333;
+            --white: #ffffff;
+        }
 
-    #pedido {
-      display: block;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 15px 30px;
-      background: #25D366;
-      color: #fff;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      z-index: 100;
-      min-width: 200px;
-      text-align: center;
-    }
-    #menu { padding-bottom: 100px; }
-  </style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            margin: 0;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background-color: var(--dark-green);
+            color: var(--primary-gold);
+            text-align: center;
+            padding: 2rem 1rem;
+            border-bottom: 4px solid var(--primary-gold);
+        }
+
+        header h1 { font-family: 'Playfair Display', serif; margin: 0; font-size: 2.5rem; }
+        header p { margin: 5px 0 0; color: var(--white); font-weight: 300; }
+
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+
+        /* Buscador y Categorías */
+        .controls { margin-bottom: 20px; display: flex; gap: 10px; }
+        input[type="text"] {
+            flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none;
+        }
+
+        /* Productos */
+        .product-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .product-card {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            border-left: 5px solid var(--primary-gold);
+        }
+        .product-info h3 { margin: 0; color: var(--dark-green); font-size: 1.1rem; }
+        .product-info p { font-size: 0.9rem; color: #666; margin: 5px 0; }
+        .price { font-weight: 600; color: var(--primary-gold); font-size: 1.2rem; }
+        
+        .add-btn {
+            background: var(--dark-green);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .add-btn:hover { background: var(--primary-gold); }
+
+        /* Carrito Flotante */
+        .cart-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--dark-green);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: none;
+        }
+
+        /* Modal de Confirmación */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content h2 { font-family: 'Playfair Display', serif; color: var(--dark-green); }
+        .order-item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 8px 0; }
+        
+        .confirm-btn {
+            background: #25d366; /* Color WhatsApp */
+            color: white;
+            width: 100%;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-  <h1 id="main-title">Mi Tienda</h1>
-  <div id="menu"></div>
-  <a id="pedido" href="#" target="_blank">📲 Ver Pedido</a>
+<header>
+    <h1>Shamadi Plaza</h1>
+    <p>Bienestar y Estilo a tu alcance</p>
+    <small>📍 C.C. Shamadi Plaza | 📞 +58 412-2525407</small>
+</header>
 
-  <script src="config.js"></script>
+<div class="container">
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Buscar productos..." onkeyup="filterProducts()">
+    </div>
+    <div id="productGrid" class="product-grid">
+        <p>Cargando catálogo...</p>
+    </div>
+</div>
 
-  <script>
-    let seleccionados = {};
-    let tasaBS = 0;
+<div class="cart-bar" id="cartBar" onclick="showModal()">
+    Ver mi pedido (<span id="cartCount">0</span> productos)
+</div>
 
-    // Inicializar elementos de la interfaz con el archivo config.js
-    function initUI() {
-      document.title = APP_CONFIG.nombreTienda;
-      document.getElementById('page-title').textContent = APP_CONFIG.nombreTienda;
-      document.getElementById('main-title').textContent = APP_CONFIG.emoji + " " + APP_CONFIG.nombreTienda;
-      document.body.style.backgroundImage = `url('${APP_CONFIG.imagenFondo}')`;
-    }
+<div class="modal" id="orderModal">
+    <div class="modal-content">
+        <h2>Confirmar Pedido</h2>
+        <div id="orderList"></div>
+        <hr>
+        <div style="font-weight: bold; font-size: 1.2rem;">Total: <span id="totalAmount"></span></div>
+        <button class="confirm-btn" onclick="sendWhatsApp()">Confirmar y enviar a WhatsApp</button>
+        <button onclick="closeModal()" style="background:none; border:none; color:grey; width:100%; margin-top:10px; cursor:pointer;">Seguir comprando</button>
+    </div>
+</div>
 
-    async function loadMenu() {
-      try {
-        initUI();
+<script>
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRsTRhoswf3zopWO5PEusQsYdYglnUlWTX9HzFIvewpy4vED9fQbs9Z0V3EdQ-AGMGLlpmcs_LL_cP3/pub?gid=0&single=true&output=tsv';
+    const WHATSAPP_NUM = "584122525407";
+    let products = [];
+    let cart = {};
 
-        // Obtener tasa BCV (usando la API configurada o el fallback de config.js)
+    async function loadProducts() {
         try {
-          const dolarRes = await fetch(APP_CONFIG.dolarApi);
-          const dolarData = await dolarRes.json();
-          tasaBS = dolarData.promedio;
-        } catch (e) {
-          console.warn("Error con API Dolar, usando tasa manual de config.");
-          tasaBS = APP_CONFIG.tasaManual;
+            const response = await fetch(SHEET_URL);
+            const data = await response.text();
+            const rows = data.split('\n').slice(1); // Saltar encabezado
+            
+            products = rows.map(row => {
+                const [id, name, price, currency, description, category] = row.split('\t');
+                return { id, name, price, currency, description, category };
+            }).filter(p => p.name);
+
+            renderProducts(products);
+        } catch (error) {
+            document.getElementById('productGrid').innerHTML = "<p>Error al cargar productos.</p>";
         }
+    }
 
-        // Obtener datos de Google Sheets
-        const res = await fetch(APP_CONFIG.sheetUrl);
-        const text = await res.text();
-        const rows = text.trim().split("\n").map(r => r.split("\t"));
-        const headers = rows[0];
-        const data = rows.slice(1);
+    function renderProducts(items) {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = items.map(p => `
+            <div class="product-card">
+                <div class="product-info">
+                    <h3>${p.name}</h3>
+                    <p>${p.description || ''}</p>
+                    <div class="price">${p.currency} ${p.price}</div>
+                </div>
+                <button class="add-btn" onclick="addToCart('${p.id}', '${p.name}', ${p.price}, '${p.currency}')">Agregar al pedido</button>
+            </div>
+        `).join('');
+    }
 
-        const categorias = {};
-        data.forEach(row => {
-          const item = {};
-          headers.forEach((h, i) => item[h.trim()] = row[i]);
+    function addToCart(id, name, price, currency) {
+        if (!cart[id]) {
+            cart[id] = { name, price, currency, qty: 1 };
+        } else {
+            cart[id].qty += 1;
+        }
+        updateCartBar();
+    }
 
-          let pUsd, pBs;
-          if(item.currency?.toUpperCase() === "USD") {
-            pUsd = parseFloat(item.price);
-            pBs = (pUsd * tasaBS).toFixed(2);
-          } else {
-            pBs = parseFloat(item.price);
-            pUsd = (pBs / tasaBS).toFixed(2);
-          }
+    function updateCartBar() {
+        const count = Object.values(cart).reduce((acc, curr) => acc + curr.qty, 0);
+        const bar = document.getElementById('cartBar');
+        if (count > 0) {
+            bar.style.display = 'block';
+            document.getElementById('cartCount').innerText = count;
+        }
+    }
 
-          item.pUsd = pUsd;
-          item.pBs = pBs;
+    function filterProducts() {
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = products.filter(p => 
+            p.name.toLowerCase().includes(term) || 
+            p.description.toLowerCase().includes(term) ||
+            p.category.toLowerCase().includes(term)
+        );
+        renderProducts(filtered);
+    }
 
-          if(!categorias[item.category]) categorias[item.category] = [];
-          categorias[item.category].push(item);
+    function showModal() {
+        const list = document.getElementById('orderList');
+        let total = 0;
+        let currency = "";
+        list.innerHTML = Object.keys(cart).map(id => {
+            const item = cart[id];
+            total += item.price * item.qty;
+            currency = item.currency;
+            return `
+                <div class="order-item">
+                    <span>${item.qty}x ${item.name}</span>
+                    <span>${item.currency} ${item.price * item.qty}</span>
+                </div>
+            `;
+        }).join('');
+        document.getElementById('totalAmount').innerText = `${currency} ${total.toFixed(2)}`;
+        document.getElementById('orderModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('orderModal').style.display = 'none';
+    }
+
+    function sendWhatsApp() {
+        let message = "¡Hola Shamadi Plaza! 🌿 Quisiera realizar el siguiente pedido:\n\n";
+        let total = 0;
+        let currency = "";
+        
+        Object.keys(cart).forEach(id => {
+            const item = cart[id];
+            message += `▪️ ${item.qty}x ${item.name} (${item.currency} ${item.price * item.qty})\n`;
+            total += item.price * item.qty;
+            currency = item.currency;
         });
 
-        renderMenu(categorias);
-      } catch (err) {
-        document.getElementById("menu").innerHTML = "<p style='text-align:center'>Error cargando el menú...</p>";
-        console.error(err);
-      }
+        message += `\n*Total a pagar: ${currency} ${total.toFixed(2)}*`;
+        const url = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUM}&text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
     }
 
-    function renderMenu(categorias) {
-      const menuDiv = document.getElementById("menu");
-      menuDiv.innerHTML = "";
+    loadProducts();
+</script>
 
-      Object.keys(categorias).forEach(cat => {
-        const catDiv = document.createElement("div");
-        catDiv.className = "category";
-        catDiv.innerHTML = `<h2>${cat}</h2><div class="carousel"></div>`;
-        const carousel = catDiv.querySelector(".carousel");
-
-        categorias[cat].forEach(item => {
-          const div = document.createElement("div");
-          div.className = "item";
-          div.innerHTML = `
-            <div>
-              <h3>${item.name}</h3>
-              <p>${item.description}</p>
-            </div>
-            <div>
-              <div class="price-tag">${item.pUsd} USD / ${item.pBs} Bs</div>
-              <button class="select-btn">➕ Agregar</button>
-              <div class="cantidad">En el carrito: 0</div>
-            </div>
-          `;
-          
-          const btn = div.querySelector(".select-btn");
-          const cantDiv = div.querySelector(".cantidad");
-
-          btn.addEventListener("click", () => {
-            if(!seleccionados[item.name]) seleccionados[item.name] = {item, cantidad:0};
-            seleccionados[item.name].cantidad++;
-            cantDiv.textContent = "En el carrito: " + seleccionados[item.name].cantidad;
-            actualizarWhatsApp();
-          });
-
-          carousel.appendChild(div);
-        });
-        menuDiv.appendChild(catDiv);
-      });
-    }
-
-    function actualizarWhatsApp() {
-      const btn = document.getElementById("pedido");
-      const items = Object.values(seleccionados);
-      
-      if(items.length === 0) return;
-
-      let totalUsd = 0, totalBs = 0, detalle = "";
-
-      items.forEach(i => {
-        const subUsd = i.item.pUsd * i.cantidad;
-        const subBs = i.item.pBs * i.cantidad;
-        totalUsd += subUsd;
-        totalBs += subBs;
-        detalle += `- ${i.item.name} x${i.cantidad} (${subUsd.toFixed(2)} USD)\n`;
-      });
-
-      const msg = `¡Hola! Me gustaría hacer un pedido en *${APP_CONFIG.nombreTienda}*:\n\n${detalle}\n*TOTAL:* ${totalUsd.toFixed(2)} USD / ${totalBs.toFixed(2)} Bs\n(Tasa: ${tasaBS} Bs)\n\n${APP_CONFIG.mensajeDespedida}`;
-
-      btn.href = `https://wa.me/${APP_CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
-      btn.textContent = `📲 Pedir (${items.reduce((a,b)=>a+b.cantidad,0)} items)`;
-    }
-
-    loadMenu();
-  </script>
 </body>
 </html>
