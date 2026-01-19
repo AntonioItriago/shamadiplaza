@@ -4,308 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shamadi Plaza - Ventas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        :root {
-            --primary-color: #8c7355; /* Marrón elegante/Dorado */
-            --secondary-color: #f4f1ee; /* Fondo crema */
-            --accent-color: #25d366; /* WhatsApp Green */
-            --text-dark: #333;
-            --white: #ffffff;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--secondary-color);
-            margin: 0;
-            padding: 0;
-            color: var(--text-dark);
-        }
-
-        header {
-            background-color: var(--white);
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .logo {
-            max-width: 150px;
-            height: auto;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
-
-        .bcv-info {
-            background: var(--primary-color);
-            color: white;
-            padding: 10px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        /* Grid de Productos */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            transition: transform 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 10px 0;
-            color: var(--primary-color);
-        }
-
-        .product-price {
-            font-size: 1.2rem;
-            color: #555;
-            margin-bottom: 15px;
-        }
-
-        .btn-add {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: 600;
-        }
-
-        /* Carrito Flotante */
-        #cart-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent-color);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            cursor: pointer;
-            z-index: 1000;
-            font-weight: bold;
-        }
-
-        /* Modal de Confirmación */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #eee;
-            padding: 10px 0;
-        }
-
-        .btn-send {
-            background: var(--accent-color);
-            color: white;
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
+        :root { --p-color: #8B4513; --s-color: #D2B48C; }
+        body { background-color: #f9f9f9; }
+        .navbar { background-color: var(--p-color); color: white; }
+        .category-title { color: var(--p-color); border-bottom: 2px solid var(--s-color); margin-top: 2rem; }
+        .card-img-top { height: 200px; object-fit: cover; }
+        .modal-header { background-color: var(--p-color); color: white; }
+        .btn-primary { background-color: var(--p-color); border: none; }
+        .carousel-item { padding: 15px; }
+        #about-btn { cursor: pointer; color: white; text-decoration: underline; }
     </style>
 </head>
 <body>
 
-<header>
-    <img src="logo.jpg" alt="Shamadi Plaza Logo" class="logo">
-    <p>Calidad y Estilo en cada detalle</p>
-</header>
+<nav class="navbar px-4 d-flex justify-content-between">
+    <div class="d-flex align-items-center">
+        <img src="logo.jpg" alt="Logo" height="50" class="me-2">
+        <span class="fw-bold">Shamadi Plaza</span>
+    </div>
+    <a id="about-btn" onclick="showAbout()">Acerca de esta web</a>
+</nav>
 
-<div class="container">
-    <div class="bcv-info" id="bcv-rate">
-        Cargando Tasa BCV...
+<div class="container my-4" id="main-container">
     </div>
 
-    <div class="products-grid" id="products-container">
+<div class="modal fade" id="cartModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5>Confirmar Pedido</h5></div>
+            <div class="modal-body" id="cart-details"></div>
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="sendWhatsApp()">Enviar a WhatsApp</button>
+            </div>
         </div>
-</div>
-
-<div id="cart-button" onclick="showModal()">
-    🛒 Ver Pedido (<span id="cart-count">0</span>)
-</div>
-
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <h2 style="color: var(--primary-color)">Confirmar Pedido</h2>
-        <div id="cart-list"></div>
-        <hr>
-        <div style="font-weight: bold; font-size: 1.2rem;">
-            Total: $<span id="total-usd">0</span> | Bs. <span id="total-bs">0</span>
-        </div>
-        <button class="btn-send" onclick="sendWhatsApp()">Confirmar y enviar WhatsApp</button>
-        <button onclick="closeModal()" style="border:none; background:none; color:red; cursor:pointer; margin-top:10px;">Cerrar</button>
     </div>
 </div>
 
+<div class="modal fade" id="aboutModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content text-center p-4">
+            <h4>Datos del Desarrollador</h4>
+            <p><strong>Antonio Itriago</strong><br>Analista, Diseñador y Desarrollador de Sistemas de Información Computarizados</p>
+            <a href="https://wa.me/584122525407" class="btn btn-outline-success">Contactar: wa.me/584122525407</a>
+        </div>
+    </div>
+</div>
+
+<script src="config.js"></script>
 <script>
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRsTRhoswf3zopWO5PEusQsYdYglnUlWTX9HzFIvewpy4vED9fQbs9Z0V3EdQ-AGMGLlpmcs_LL_cP3/pub?gid=0&single=true&output=tsv';
-    const WHATSAPP_NUMBER = '584122525407';
-    let bcvRate = 341.74; // Tasa por defecto (actualizada 17/01/2026)
     let cart = [];
+    let bcvRate = 0;
 
-    // 1. Obtener datos de la Google Sheet
-    async function loadProducts() {
-        try {
-            const response = await fetch(SHEET_URL);
-            const data = await response.text();
-            const rows = data.split('\n').slice(1); // Saltar encabezado
-            
-            const container = document.getElementById('products-container');
-            
-            rows.forEach(row => {
-                const cols = row.split('\t');
-                if (cols.length >= 4) {
-                    const product = {
-                        id: cols[0],
-                        name: cols[1],
-                        price: parseFloat(cols[2]),
-                        currency: cols[3],
-                        description: cols[4] || '',
-                        category: cols[5] || ''
-                    };
+    async function init() {
+        bcvRate = await getBCVRate();
+        const products = await fetchProducts();
+        renderCategories(products);
+    }
 
-                    const card = document.createElement('div');
-                    card.className = 'product-card';
-                    card.innerHTML = `
-                        <div>
-                            <div class="product-name">${product.name}</div>
-                            <small>${product.category}</small>
-                            <p style="font-size: 0.8rem; color: #777;">${product.description}</p>
+    function renderCategories(products) {
+        const container = document.getElementById('main-container');
+        const categories = [...new Set(products.map(p => p.category))];
+        
+        categories.forEach(cat => {
+            const catProds = products.filter(p => p.category === cat);
+            let html = `<h3 class="category-title">${cat}</h3><div class="row overflow-auto flex-nowrap pb-3">`;
+            catProds.forEach(p => {
+                html += `
+                <div class="col-10 col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6>${p.name}</h6>
+                            <p class="small text-muted">${p.description}</p>
+                            <p class="fw-bold">$${p.price}</p>
+                            <button class="btn btn-sm btn-primary" onclick="addToCart('${p.id}', '${p.name}', ${p.price})">Agregar</button>
                         </div>
-                        <div>
-                            <div class="product-price">$${product.price.toFixed(2)}</div>
-                            <button class="btn-add" onclick="addToCart('${product.name}', ${product.price})">Añadir al pedido</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                }
+                    </div>
+                </div>`;
             });
-        } catch (error) {
-            console.error('Error cargando productos:', error);
-        }
-    }
-
-    // 2. Tasa BCV (Simulación con valor real obtenido hoy)
-    function updateBCV() {
-        document.getElementById('bcv-rate').innerText = `Tasa BCV hoy: Bs. ${bcvRate.toFixed(2)}`;
-    }
-
-    // 3. Lógica del Carrito
-    function addToCart(name, price) {
-        const existing = cart.find(item => item.name === name);
-        if (existing) {
-            existing.qty += 1;
-        } else {
-            cart.push({ name, price, qty: 1 });
-        }
-        updateCartCount();
-        alert(`${name} añadido al pedido`);
-    }
-
-    function updateCartCount() {
-        const count = cart.reduce((acc, item) => acc + item.qty, 0);
-        document.getElementById('cart-count').innerText = count;
-    }
-
-    function showModal() {
-        const list = document.getElementById('cart-list');
-        list.innerHTML = '';
-        let totalUSD = 0;
-
-        cart.forEach((item, index) => {
-            const subtotal = item.price * item.qty;
-            totalUSD += subtotal;
-            list.innerHTML += `
-                <div class="cart-item">
-                    <span>${item.qty}x ${item.name}</span>
-                    <span>$${subtotal.toFixed(2)}</span>
-                </div>
-            `;
+            html += `</div>`;
+            container.innerHTML += html;
         });
-
-        document.getElementById('total-usd').innerText = totalUSD.toFixed(2);
-        document.getElementById('total-bs').innerText = (totalUSD * bcvRate).toLocaleString('es-VE', {minimumFractionDigits: 2});
-        document.getElementById('modal').style.display = 'flex';
     }
 
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
+    function addToCart(id, name, price) {
+        cart.push({id, name, price});
+        alert(`${name} agregado al pedido`);
     }
 
-    // 4. Envío a WhatsApp
+    async function showCart() {
+        const distance = prompt("Introduce la distancia aproximada en km para el delivery:");
+        const deliveryCost = distance * CONFIG.deliveryFactor;
+        const totalUSD = cart.reduce((sum, item) => sum + item.price, 0) + deliveryCost;
+        const totalVES = (totalUSD * bcvRate).toFixed(2);
+
+        let details = `<ul>` + cart.map(i => `<li>${i.name} - $${i.price}</li>`).join('') + `</ul>`;
+        details += `<p><strong>Tasa BCV:</strong> ${bcvRate} Bs/$</p>`;
+        details += `<p><strong>Delivery aproximado es:</strong> $${deliveryCost.toFixed(2)}</p>`;
+        details += `<h5>Total: $${totalUSD.toFixed(2)} / ${totalVES} Bs.</h5>`;
+        
+        document.getElementById('cart-details').innerHTML = details;
+        new bootstrap.Modal(document.getElementById('cartModal')).show();
+    }
+
+    function showAbout() {
+        new bootstrap.Modal(document.getElementById('aboutModal')).show();
+    }
+
     function sendWhatsApp() {
-        let message = "¡Hola Shamadi Plaza! Me gustaría realizar este pedido:\n\n";
-        let totalUSD = 0;
-
-        cart.forEach(item => {
-            const subtotal = item.price * item.qty;
-            totalUSD += subtotal;
-            message += `• ${item.qty} x ${item.name} ($${subtotal.toFixed(2)})\n`;
-        });
-
-        const totalBS = (totalUSD * bcvRate).toLocaleString('es-VE', {minimumFractionDigits: 2});
-        message += `\n💵 *Total USD:* $${totalUSD.toFixed(2)}`;
-        message += `\n🇻🇪 *Total Bs (Tasa ${bcvRate}):* Bs. ${totalBS}`;
-        message += `\n\nPor favor, confírmenme disponibilidad.`;
-
-        const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
+        let message = `Hola, quiero realizar un pedido:\n` + cart.map(i => `- ${i.name}`).join('\n');
+        message += `\nTotal: $${(cart.reduce((s,i)=>s+i.price,0)).toFixed(2)}`;
+        window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`);
     }
 
-    // Inicializar
-    window.onload = () => {
-        loadProducts();
-        updateBCV();
-    };
+    init();
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
